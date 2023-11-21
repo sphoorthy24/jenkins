@@ -13,6 +13,11 @@ pipeline {
             steps {
                 // Your build steps go here
                 echo 'Building the project...'
+
+                // Log build status to Stackdriver
+                script {
+                    sh 'gcloud logging write build-log "Build successful" --severity=INFO'
+                }
             }
         }
 
@@ -20,6 +25,11 @@ pipeline {
             steps {
                 // Your test steps go here
                 echo 'Running tests...'
+
+                // Log test status to Stackdriver
+                script {
+                    sh 'gcloud logging write test-log "Tests passed" --severity=INFO'
+                }
             }
         }
 
@@ -27,15 +37,28 @@ pipeline {
             steps {
                 // Your deployment steps go here
                 echo 'Deploying the project...'
+
+                // Log deployment status to Stackdriver
+                script {
+                    sh 'gcloud logging write deploy-log "Deployment successful" --severity=INFO'
+                }
             }
         }
     }
 
     post {
         success {
+            // Log success message to Stackdriver
+            script {
+                sh 'gcloud logging write success-log "Pipeline succeeded" --severity=INFO'
+            }
             echo 'Pipeline succeeded! You can add more post-success actions here.'
         }
         failure {
+            // Log failure message to Stackdriver
+            script {
+                sh 'gcloud logging write failure-log "Pipeline failed" --severity=ERROR'
+            }
             echo 'Pipeline failed! You can add more post-failure actions here.'
         }
     }
