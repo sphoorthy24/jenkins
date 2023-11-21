@@ -11,7 +11,7 @@ pipeline {
                 script {
                     // Generate SSH key (if not already generated)
                     sshKey = sshUserPrivateKey(
-                        credentialsId: 'your-github-ssh-credentials-id',
+                        credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
                         keyFileVariable: 'SSH_PRIVATE_KEY',
                         passphraseVariable: '',
                         generate: true
@@ -22,7 +22,7 @@ pipeline {
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
                         userRemoteConfigs: [[
-                            credentialsId: 'your-github-ssh-credentials-id',
+                            credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
                             url: 'git@github.com:sphoorthy24/jenkins.git'
                         ]]
                     ])
