@@ -11,7 +11,7 @@ pipeline {
                 script {
                     // Generate SSH key (if not already generated)
                     sshKey = sshUserPrivateKey(
-                        credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                        credentialsId: 'your-github-ssh-credentials-id',
                         keyFileVariable: 'SSH_PRIVATE_KEY',
                         passphraseVariable: '',
                         generate: true
@@ -22,7 +22,7 @@ pipeline {
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
                         userRemoteConfigs: [[
-                            credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                            credentialsId: 'your-github-ssh-credentials-id',
                             url: 'git@github.com:sphoorthy24/jenkins.git'
                         ]]
                     ])
@@ -50,11 +50,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                script {
-                    // Your deploy steps go here
-                    // This is just a placeholder, replace it with your actual deployment steps
-                    echo 'Deploying...'
-                }
+                // Use gcloud commands to deploy to Google Compute Engine
+                sh 'gcloud compute instances create instance-jen --image c0-deeplearning-common-cpu-v20230925-debian-10'
             }
         }
     }
@@ -62,9 +59,13 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded! You can add more post-success actions here.'
+            // Example: Send a notification on success
+            slackSend channel: '#general', color: 'good', message: "Pipeline succeeded!"
         }
         failure {
             echo 'Pipeline failed! You can add more post-failure actions here.'
+            // Example: Send a notification on failure
+            slackSend channel: '#general', color: 'danger', message: "Pipeline failed!"
         }
     }
 }
