@@ -30,15 +30,15 @@ pipeline {
             }
         }
 
-        stage('Build') {
-    steps {
-        script {
+    stage('Build') {
+        steps {
+            script {
             // Your build steps go here
-            def mvnHome = tool 'Maven'
-            sh "${mvnHome}/bin/mvn clean install"
+                def mvnHome = tool 'Maven'
+                sh "${mvnHome}/bin/mvn clean install"
+                }
+            }    
         }
-    }
-}
 
 
         stage('Test') {
