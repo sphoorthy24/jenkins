@@ -1,15 +1,70 @@
 pipeline {
     agent any
 
+    environment {
+        GIT_SSH_COMMAND = 'ssh -o StrictHostKeyChecking=no'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    // Your checkout and other steps go here
-                    echo 'Hello, world!'
+                    // Generate SSH key (if not already generated)
+                    sshKey = sshUserPrivateKey(
+                        credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                        keyFileVariable: 'SSH_PRIVATE_KEY',
+                        passphraseVariable: '',
+                        generate: true
+                    )
+
+                    // Use the generated SSH key for Git operations
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        userRemoteConfigs: [[
+                            credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                            url: 'git@github.com:sphoorthy24/jenkins.git'
+                        ]]
+                    ])
                 }
             }
         }
-        // Add more stages as needed
+
+        stage('Build') {
+            steps {
+                script {
+                    // Your build steps go here
+                    sh 'mvn clean install' // Example Maven build step
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Your test steps go here
+                    sh 'mvn test' // Example Maven test step
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Your deploy steps go here
+                    // This is just a placeholder, replace it with your actual deployment steps
+                    echo 'Deploying...'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded! You can add more post-success actions here.'
+        }
+        failure {
+            echo 'Pipeline failed! You can add more post-failure actions here.'
+        }
     }
 }
