@@ -5,7 +5,7 @@ pipeline {
         GIT_SSH_COMMAND = 'ssh -o StrictHostKeyChecking=no'
     }
 
-stages {
+    stages {
         stage('Generate SSH key') {
             steps {
                 script {
@@ -28,27 +28,14 @@ stages {
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
                         userRemoteConfigs: [[
-                            url: 'git@github.com:sphoorthy24/jenkins.git',
-                            credentialsId: 'your-ssh-credentials-id'
+                            credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                            url: 'git@github.com:sphoorthy24/jenkins.git'
                         ]]
                     ])
                 }
             }
         }
 
-   
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    checkout([$class: 'GitSCM', 
-                              branches: [[name: '*/master']], 
-                              userRemoteConfigs: [[credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383', url: 'git@github.com:sphoorthy24/jenkins.git']]])
-                }
-            }
-        }
-
-        // Add additional stages as needed
         stage('Build') {
             steps {
                 // Your build steps go here
