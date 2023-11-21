@@ -5,6 +5,38 @@ pipeline {
         GIT_SSH_COMMAND = 'ssh -o StrictHostKeyChecking=no'
     }
 
+stages {
+        stage('Generate SSH key') {
+            steps {
+                script {
+                    // Generate SSH key
+                    sshKey = sshUserPrivateKey(
+                        credentialsId: '0c3a267f-f450-447b-8beb-b00e9bf5b383',
+                        keyFileVariable: 'SSH_PRIVATE_KEY',
+                        passphraseVariable: '',
+                        generate: true
+                    )
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                script {
+                    // Use the generated SSH key for Git operations
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        userRemoteConfigs: [[
+                            url: 'git@github.com:sphoorthy24/jenkins.git',
+                            credentialsId: 'your-ssh-credentials-id'
+                        ]]
+                    ])
+                }
+            }
+        }
+
+   
     stages {
         stage('Checkout') {
             steps {
