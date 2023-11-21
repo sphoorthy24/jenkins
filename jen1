@@ -59,13 +59,10 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded! You can add more post-success actions here.'
-            // Example: Send a notification on success
-            slackSend channel: '#general', color: 'good', message: "Pipeline succeeded!"
+            
         }
         failure {
             echo 'Pipeline failed! You can add more post-failure actions here.'
-            // Example: Send a notification on failure
-            slackSend channel: '#general', color: 'danger', message: "Pipeline failed!"
         }
     }
 }
