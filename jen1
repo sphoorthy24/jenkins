@@ -31,13 +31,15 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                script {
-                    // Your build steps go here
-                    sh 'mvn clean install' // Example Maven build step
-                }
-            }
+    steps {
+        script {
+            // Your build steps go here
+            def mvnHome = tool 'Maven'
+            sh "${mvnHome}/bin/mvn clean install"
         }
+    }
+}
+
 
         stage('Test') {
             steps {
