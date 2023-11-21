@@ -64,16 +64,3 @@ pipeline {
     }
 }
 
-// Monitor stage outside the stages block
-stage('Monitor') {
-    steps {
-        script {
-            // Send a custom metric to Stackdriver based on pipeline status
-            if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
-                sh 'echo "1" | gcloud monitoring write custom.googleapis.com/my-pipeline-status --data-type=double'
-            } else {
-                sh 'echo "0" | gcloud monitoring write custom.googleapis.com/my-pipeline-status --data-type=double'
-            }
-        }
-    }
-}
